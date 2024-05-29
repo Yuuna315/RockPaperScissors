@@ -1,70 +1,64 @@
-// console.log("Hello World");
 
-let humanScore = 0, computerScore = 0;
+const rockBtn = document.getElementById('rock-btn');
+const paperBtn = document.getElementById('paper-btn');
+const scissorsBtn = document.getElementById('scissors-btn');
+const resultText = document.getElementById('result-text');
+const humanScoreText = document.getElementById('human-score');
+const computerScoreText = document.getElementById('computer-score');
+const gameOptions = ['rock', 'paper', 'scissors'];
+let humanScore = 0;
+let computerScore = 0;
 
-function getHumanChoice() {
-    let humanChoice = prompt("Rock, Paper or Scissors?????");
-    if (['rock', 'paper', 'scissors'].includes(humanChoice.toLowerCase())) {
-        return humanChoice.toLowerCase();
+rockBtn.addEventListener('click', () => {
+    playRound('rock', getComputerChoice());
+});
+
+paperBtn.addEventListener('click', () => {
+    playRound('paper', getComputerChoice());
+});
+
+scissorsBtn.addEventListener('click', () => {
+    playRound('scissors', getComputerChoice());
+});
+
+const getComputerChoice = () => {
+    return gameOptions[Math.floor(Math.random() * 3)];
+}
+
+
+const getHumanChoice = () => {
+    let userInput = prompt("Rock, Paper or Scissors?????").toLowerCase();
+    if (gameOptions.includes(userInput)) {
+        return userInput;
     } else {
         console.log("Incorrect entry");
-        return null; // Return null to indicate invalid input
+        return getComputerChoice(); 
     }
 }
 
-function getComputerChoice() {
-    const choices = ["rock", "paper", "scissors"];
-    return choices[Math.floor(Math.random() * choices.length)];
-}
 
-function playRound(humanChoice, computerChoice) {
-    if (!humanChoice) return; // Exit if humanChoice is null
+const playRound = (humanChoice, computerChoice) => {
 
     if ((humanChoice === 'rock' && computerChoice === 'scissors') ||
         (humanChoice === 'scissors' && computerChoice === 'paper') ||
-        (humanChoice === 'paper' && computerChoice === 'rock')) {
-        console.log("You Win " + humanChoice + " beats " + computerChoice);
+        (humanChoice === 'paper' && computerChoice === 'rock')
+    ) {
         humanScore++;
-        checkWinCondition();
-    } else if (humanChoice === computerChoice) {
-        console.log("It's a Draw You both selected " + humanChoice);
+        humanScoreText.innnerText = humanScore;
+        resultText.innerText = 'YOU WIN!';
+        } else if (humanChoice === computerChoice) {
+        resultText.innnerText = 'It is tie.';
     } else {
-        console.log("You Lose " + computerChoice + " beats " + humanChoice);
         computerScore++;
-        checkWinCondition();
+        computerScoreText.innerText = computerScore;
+        resultText.innerText = 'You lose....';
     }
-}
 
-function checkWinCondition() {
-    if (humanScore >= 5) {
-        console.log("Congratulations You have won 5 games in a row.");
-        return true; // Stop further rounds
+    if (humanScore > 4 || computerScore > 4){
+        resultText.innerHTML = humanScore > 4 ? 'You win the game!!!!!' : 'You lose the game....';
+        humanScore = 0;
+        computerScore = 0;
+        humanScoreText.innerText = humanScore;
+        computerScoreText.innerText = computerScore;
     }
-    return false; // Continue playing
-}
-
-function score() {
-    console.log("Current score: Player:" + humanScore + " Computer: " + computerScore);
-}
-
-function finalscore() {
-    if (humanScore > computerScore) {
-        console.log("You Win " + humanScore + " to " + computerScore + " Congratulations!");
-    } else if (humanScore < computerScore) {
-        console.log("You Lose " + humanScore + " to " + computerScore);
-    } else {
-        console.log("Game Ends in a draw, " + humanScore);
-    }
-}
-
-function game() {
-    for (let i = 0; i < 5; i++) { // Play exactly 5 rounds
-        let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-        playRound(humanChoice, computerChoice);
-        score();
-    }
-    finalscore();
-}
-
-game();
+};
